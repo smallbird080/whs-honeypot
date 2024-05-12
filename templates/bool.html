@@ -1,0 +1,30 @@
+<form action="/bool" method="post">
+    <label for="num_vars">Number of variables:</label>
+    <select id="num_vars" name="num_vars">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <!-- Add more options as needed -->
+    </select>
+    <form action="/bool" method="post">
+        <label for="minterms">Enter minterms:</label>
+        <input type="text" id="minterms" name="minterms" placeholder="Enter numbers separated by comma">
+        <label for="dont_cares">Enter don't cares:</label>
+        <input type="text" id="dont_cares" name="dont_cares" placeholder="Enter numbers separated by comma">
+        <input type="submit" value="Submit">
+    </form>
+    <input type="submit" value="Submit">
+</form>
+
+<div class="row mt-5">
+	<h1>** Boolean Simplifier **</h1>
+</div>
+
+<p>Output: {{ output }}</p>

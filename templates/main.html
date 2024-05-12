@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to my honeypot</title>
+    <style>
+    body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #fffcd2;
+    font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        color: #333;
+        font-size: 3em;
+        font-family: "Courier New", monospace;
+    }
+
+    button {
+        margin: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #44b62e;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    #button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 50px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+    <h1>Welcome to my honeypot</h1>
+</body>
+<div id="button-container">
+    <button onclick="window.location.href='/calc'">calc</button>
+    <button onclick="window.location.href='/bool'">bool</button>
+</div>
+</html>
