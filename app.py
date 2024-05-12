@@ -1,7 +1,8 @@
 from flask import Flask, render_template, redirect, request
-import subprocess
+import subprocess, logging
 
 app = Flask(__name__)
+logging.basicConfig(filename='app.log', level=logging.INFO)
 
 @app.route('/')
 def home():

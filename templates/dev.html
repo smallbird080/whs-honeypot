@@ -3,20 +3,44 @@
 <head>
     <title>Under Construction</title>
     <style>
+        body {
+            background-color: #ffdfe7;
+            font-family:'Times New Roman', Times, serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-size: 2em;
+            text-shadow: 3px 3px 0 rgba(255, 0, 119, 0.192)
+        }
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: Arial, sans-serif;
-            font-size: 24px;
-            color: #333;
         }
         .message {
             text-align: center;
+            animation: bounce 2s infinite;
         }
         .emoji {
             font-size: 48px;
+        }
+        .home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #FF69B4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .home-button:hover {
+            background-color: #ff2599;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
         }
     </style>
 </head>
@@ -25,6 +49,7 @@
         <div class="message">
             <h1>🚧 Under Construction 🚧</h1>
             <p>This page is still under development. Please check back later!</p>
+            <button class="home-button" onclick="location.href='/'">Go to Home Page</button>
         </div>
     </div>
 </body>
