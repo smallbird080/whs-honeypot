@@ -84,7 +84,7 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    ip = "127.0.0.1"
-    debug = True
+    ip = "0.0.0.0"
+    debug = False
     app.run(host=ip,port=5001,debug=debug)
     
