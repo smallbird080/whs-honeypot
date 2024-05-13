@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 import subprocess, logging
 
 app = Flask(__name__)
@@ -14,36 +14,36 @@ def calculator():
 
 @app.route('/bool',methods=['GET','POST'])
 def boolean():
-    dev = True
-    if dev:
-        return render_template('dev.html')
-    else:
-        num_vars = request.form.get('num_vars')
-        minterms = request.form.get('minterms')
-        dont_cares = request.form.get('dont_cares')
+    error_message = None
+    if request.method == 'POST':
+        num_vars = request.form['num_vars']
+        minterms = request.form['minterms']
+        dont_cares = request.form['dont_cares']
 
-        if not all([num_vars, minterms, dont_cares]):
-            return "Invalid input", 400
+        if not all(char.isnumeric() or char.isspace() for char in minterms + dont_cares):
+            error_message = 'Invalid input, please try again. (only numbers and spaces allowed)'
+            return render_template('bool.html', error_message=error_message)
 
         try:
-            minterms_list = [int(num) for num in minterms.split(',')]
-            dont_cares_list = [int(num) for num in dont_cares.split(',')]
-        except ValueError:
-            return "Invalid number format", 400
+            minterms_str = " ".join(minterms.split())
+            dont_cares_str = " ".join(dont_cares.split())
+        except:
+            error_message = 'Invalid input, please try again. (Hint: Use spaces to separate numbers)'
+            return render_template('bool.html', error_message=error_message)
 
-        minterms_str = ' '.join(map(str, minterms_list))
-        dont_cares_str = ' '.join(map(str, dont_cares_list))
-
-        command = f"python boolean.py {num_vars} {minterms_str} {dont_cares_str}"
+        command = f"python3 boolean.py {num_vars} "+'"'+f"{minterms_str}"+'" "'+ f"{dont_cares_str}"+'"'
 
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         output, _ = process.communicate()
 
         if process.returncode != 0:
-            return "Error executing script", 500
+            error_message = 'Invalid input, please try again.'
+            return render_template('bool.html', error_message=error_message)
 
-        output = output.decode().strip()
-        return render_template('bool.html', output=output)
+        output = output.decode()
+        return render_template('bool.html', output=output, error_message=error_message)
+    else:
+        return render_template('bool.html', error_message=error_message)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -55,6 +55,6 @@ def internal_server_error(e):
 
 if __name__ == '__main__':
     ip = "127.0.0.1"
-    debug = False
+    debug = True
     app.run(host=ip,debug=debug)
     
