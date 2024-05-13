@@ -1,3 +1,62 @@
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        form {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select, input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .row {
+            width: 50%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        p {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<div class="row mt-5">
+    <h1>** Boolean function Simplifier **</h1>
+</div> 
+
 <form method="POST" action="/bool" >
     <label for="num_vars">Number of variables:</label>
     <select id="num_vars" name="num_vars">
@@ -19,12 +78,54 @@
     <input type="submit" value="Submit">
 </form>
 
-<div class="row mt-5">
-	<h1>** Boolean Simplifier **</h1>
-</div> 
 
 {% if error_message %}
     <p>{{ error_message }}</p>
 {% endif %}
 
-<p>Output: {{ output }}</p>
+<p>Output:</p>
+{% if output0 %}
+    <p>{{ output0 }}</p>
+{% endif %}
+{% if output1 %}
+    <p>{{ output1 }}</p>
+{% endif %}
+{% if output2 %}
+    <p>{{ output2 }}</p>
+{% endif %}
+{% if output3 %}
+    <p>{{ output3 }}</p>
+{% endif %}
+{% if output4 %}
+    <p>{{ output4 }}</p>
+{% endif %}
+{% if output5 %}
+    <p>{{ output5 }}</p>
+{% endif %}
+
+<div id="buttonContainer">
+    <button onclick="window.location.href='/'">Main</button>
+</div>
+
+<style>
+    #buttonContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    button {
+        margin: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007BFF;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>

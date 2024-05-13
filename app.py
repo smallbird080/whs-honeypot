@@ -1,11 +1,19 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request
 import subprocess, logging
 
 app = Flask(__name__)
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
-@app.route('/')
+@app.route('/',methods=['GET','POST'])
 def home():
+    username,password = "", ""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        logging.info(f"Username: {username}, Password: {password}")
+        username = username.replace('<','&lt;')
+        password = password.replace('<','&lt;')
+        return render_template('main.html',user=username)
     return render_template('main.html')
 
 @app.route('/calc')
@@ -41,9 +49,31 @@ def boolean():
             return render_template('bool.html', error_message=error_message)
 
         output = output.decode()
-        return render_template('bool.html', output=output, error_message=error_message)
+        index1 = output.find("Essential")
+        index2 = output.find("P0")
+        index3 = output.find("Petrick")
+        index4 = output.find("Minimum")
+        output1 = output[0:index1-4]
+        output2 = output[index1:index2-4]
+        output3 = output[index2:index3-4]
+        output4 = output[index3:index4]
+        output5 = output[index4:]
+        if (index1 == -1) or (index2 == -1) or (index3 == -1):
+            return render_template('bool.html', output0=output)
+        else:
+            return render_template('bool.html', output1=output1, output2=output2, output3=output3, output4=output4, output5=output5)
     else:
         return render_template('bool.html', error_message=error_message)
+
+@app.route('/login',methods=['GET','POST'])
+def login():
+    username,password = "", ""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        logging.info(f"Username: {username}, Password: {password}")
+        return redirect('/')
+    return render_template('login.html')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -56,5 +86,5 @@ def internal_server_error(e):
 if __name__ == '__main__':
     ip = "127.0.0.1"
     debug = True
-    app.run(host=ip,debug=debug)
+    app.run(host=ip,port=5001,debug=debug)
     

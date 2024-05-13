@@ -152,6 +152,11 @@ symbol_list = []
 for strlist in P_list:
     symbol_list.append(symbols(strlist))
 
+for item in P_dict.keys():
+    print(P_dict[item], end=" : ")
+    print(item.to_variable(), end=" / ")
+    print()
+
 or_list = []
 for symlist in symbol_list:
     or_list.append(Or(*symlist))
@@ -173,7 +178,7 @@ for i in range(len(all_cases)):
     result_str = ""
     for j in range(len(all_cases[i])):
         if(j == len(all_cases[i])-1):
-            result_str += inverted_P_dict[all_cases[i][j]].to_variable()
+            result_str += inverted_P_dict[all_cases[i][j]].to_variable() + " / "
         else:
             result_str += inverted_P_dict[all_cases[i][j]].to_variable() + " + "
     strings.append(result_str)
