@@ -10,7 +10,8 @@ def home():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        logging.info(f"Username: {username}, Password: {password}")
+        user_ip = request.remote_addr
+        logging.info(f"IP: {user_ip}, Username: {username}, Password: {password}")
         username = username.replace('<','&lt;')
         password = password.replace('<','&lt;')
         return render_template('main.html',user=username)
