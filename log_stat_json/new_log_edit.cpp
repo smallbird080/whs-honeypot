@@ -98,6 +98,10 @@ bool isNormalLog(const json &logEntry, bool identified) {
     return status < 400 && !identified && !isSuspiciousUserAgent(logEntry["http_user_agent"].get<std::string>());
 }
 
+void removeUTF8EncodedCharacters(std::string& str) {
+    str.erase(std::remove_if(str.begin(), str.end(), [](unsigned char c) { return c >= 128; }), str.end());
+}
+
 json analyzeLogs(const std::string &jsonFilePath, json &attack_IP) {
     std::ifstream inputFile(jsonFilePath);
     std::string line;
@@ -123,6 +127,8 @@ json analyzeLogs(const std::string &jsonFilePath, json &attack_IP) {
         if (line.empty()) {
             continue;
         }
+
+        removeUTF8EncodedCharacters(line);
         json logEntry = json::parse(line);
         summary["total_log_count"] = summary["total_log_count"].get<int>() + 1;
 
@@ -193,8 +199,8 @@ void addIPcnt(const json &logEntry, json &attack_IP, bool danger_log) {
     }
 }
 
-int main() {
-    std::string jsonFilePath = "access.log";
+int main(int argc, char **argv) {
+    std::string jsonFilePath = argv[1];
     std::string outputFilePath = "analysis_results.json";
     std::string attack_IP_count = "attack_IP_count.json";
 
