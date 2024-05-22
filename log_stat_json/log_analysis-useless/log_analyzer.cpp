@@ -149,12 +149,17 @@ void loginAttempt(int &responseCode, std::string &threat, std::__1::string &line
 
 std::string findThreat(std::string message)
 {   
-    if (message.find("admin") != std::string::npos || message.find("Admin") != std::string::npos)
+    if (message.find("admin") != std::string::npos || message.find("Admin") != std::string::npos || message.find("manager") != std::string::npos)
         return "Admin_Access";
     if (message.find("ZGrab") != std::string::npos)
         return "SCAN";
+        /*
+        add more malicious keywords here
+        */
     for (std::string safeLog : SAFELOGS)
-    {
+    {   
+        // safelog: favicon.ico, robots.txt, sitemap.xml, "/.well-known/security.txt", " " 200 -"
+        // add more safe keywords here
         if (message.find(safeLog) != std::string::npos)
             return "SAFE";
     }
