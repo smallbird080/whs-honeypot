@@ -22,6 +22,7 @@ const std::regex xssRegex(R"(<script>|javascript:)");
 const std::regex sqlInjectionRegex(R"((union select|select .* from|insert into|drop table|update .* set))");
 const std::regex malformedRequestRegex(R"(PRI|CONNECT|TRACE|TRACK|DEBUG|OPTIONS|PATCH|TRACE|PUT)");
 
+void addSSH(json &attack_IP, json& summary);
 void addIPcnt(const json &logEntry, json &attack_IP, bool danger_log);
 
 std::map<std::string, int> classifyLog(const json &logEntry, bool &identified) {
@@ -167,6 +168,7 @@ json analyzeLogs(const std::string &jsonFilePath, json &attack_IP) {
         addIPcnt(logEntry, attack_IP, identified);
     }
 
+    addSSH(attack_IP, summary);
     inputFile.close();
     return summary;
 }
@@ -209,7 +211,7 @@ std::string trim(const std::string& str) {
     return str.substr(first, (last - first + 1));
 }
 
-void addSSH(const json &logEntry, json &attack_IP, json& summary){
+void addSSH(json &attack_IP, json& summary){
     std::ifstream inputFile("ssh_log.txt");
     std::string line;
     while (std::getline(inputFile, line)) {
@@ -222,7 +224,6 @@ void addSSH(const json &logEntry, json &attack_IP, json& summary){
         summary["danger_log"]["ssh"] = summary["danger_log"]["ssh"].get<int>() + 1;
         summary["danger_log_count"] = summary["danger_log_count"].get<int>() + 1;
         summary["total_log_count"] = summary["total_log_count"].get<int>() + 1;
-        json logEntry = json::parse(line);
         std::string addr = trim(line.substr(line.find("ssh:notty")+12,15));
         bool found = false;
         for(auto& ip : attack_IP){
