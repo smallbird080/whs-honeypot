@@ -27,10 +27,10 @@ void addIPcnt(const json &logEntry, json &attack_IP, bool danger_log);
 
 std::map<std::string, int> classifyLog(const json &logEntry, bool &identified) {
     std::map<std::string, std::vector<std::string>> categories = {
-        {"admin_access", {"admin"}},
+        {"admin_access", {"admin", "Admin", "manager"}},
         {"user_login", {"login"}},
-        {"file_access", {".config", ".backup", ".secret", ".env", ".json", ".xml", ".yml", "yaml", ".php", ".bak"}},
-        {"port_scan", {"nmap", "masscan"}},
+        {"file_access", {"config", ".backup", ".secret", ".env", ".json", ".xml", ".yml", "yaml", "php", ".bak", ".DS_Store"}},
+        {"port_scan", {"nmap", "masscan", "ports"}},
         {"bot_or_script_access", {}},
         {"invalid_or_malformed_requests", {}}
     };
