@@ -119,7 +119,8 @@ json analyzeLogs(const std::string &jsonFilePath, json &attack_IP) {
             {"sql_injection_attempts", 0},
             {"bot_or_script_access", 0},
             {"invalid_or_malformed_requests", 0},
-            {"unidentified", 0}
+            {"unidentified", 0},
+            {"ssh", 0}
         }}
     };
 
@@ -196,6 +197,48 @@ void addIPcnt(const json &logEntry, json &attack_IP, bool danger_log) {
             attack_IP.push_back(new_ip);
         }
     
+    }
+}
+
+std::string trim(const std::string& str) {
+    size_t first = str.find_first_not_of(' ');
+    if (std::string::npos == first) {
+        return str;
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
+}
+
+void addSSH(const json &logEntry, json &attack_IP, json& summary){
+    std::ifstream inputFile("ssh_log.txt");
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        if (line.empty()) {
+            continue;
+        }
+        if (line.find("btmp begins") != std::string::npos) {
+            return;
+        }
+        summary["danger_log"]["ssh"] = summary["danger_log"]["ssh"].get<int>() + 1;
+        summary["danger_log_count"] = summary["danger_log_count"].get<int>() + 1;
+        summary["total_log_count"] = summary["total_log_count"].get<int>() + 1;
+        json logEntry = json::parse(line);
+        std::string addr = trim(line.substr(line.find("ssh:notty")+12,15));
+        bool found = false;
+        for(auto& ip : attack_IP){
+            if(ip["IP"] == addr){
+                ip["count"] = ip["count"].get<int>() + 1;
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            json new_ip{
+                {"IP", addr},
+                {"count", 1}
+            };
+            attack_IP.push_back(new_ip);
+        }
     }
 }
 
