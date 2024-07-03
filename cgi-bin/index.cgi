@@ -1,9 +1,8 @@
 #!/usr/bin/php
 <?php
 session_start();
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
-    exit;
+if (!isset($_SESSION['username'])) {
+    echo '<a href="login.php">Go to Login Page</a>';
 }
 ?>
 <!DOCTYPE html>
