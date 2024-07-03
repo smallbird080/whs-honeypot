@@ -6,8 +6,12 @@
 #include <map>
 #include <regex>
 #include "json.hpp"
+#include <iomanip>
+#include <chrono>
 
 using json = nlohmann::json;
+
+std::chrono::system_clock::time_point NOW;
 
 const std::vector<std::string> knownBotsOrScripts = {
     "python-requests", "curl", "wget", "PostmanRuntime", "bot", "crawler", "spider"
@@ -134,6 +138,24 @@ json analyzeLogs(const std::string &jsonFilePath, json &attack_IP) {
         json logEntry = json::parse(line);
         summary["total_log_count"] = summary["total_log_count"].get<int>() + 1;
 
+        std::string log_time_str = summary["time_local"].get<std::string>().substr(0,20);
+
+        // 문자열을 tm 구조체로 변환
+        std::tm log_time_tm = {};
+        std::istringstream ss(log_time_str);
+        ss >> std::get_time(&log_time_tm, "%d/%b/%Y:%H:%M:%S");
+
+        // tm 구조체를 time_t로 변환
+        std::time_t log_time_t = mktime(&log_time_tm);
+
+        // time_t를 system_clock::time_point로 변환
+        std::chrono::system_clock::time_point log_time_tp = std::chrono::system_clock::from_time_t(log_time_t);
+
+        // 현재로부터 1분 이전 로그만 분석, 1분마다 프로그램 실행 예정
+        if(log_time_tp < NOW - std::chrono::minutes(1)){
+            continue;
+        }
+
         bool identified = false;
         std::map<std::string, int> logCounts = classifyLog(logEntry, identified);
         bool isDangerLog = false;
@@ -245,8 +267,12 @@ void addSSH(json &attack_IP, json& summary){
 
 int main(int argc, char **argv) {
     std::string jsonFilePath = argv[1];
+    std::string total_analysis = argv[2];
+    std::string total_IP = argv[3];
     std::string outputFilePath = "analysis_results.json";
     std::string attack_IP_count = "attack_IP_count.json";
+
+    NOW = std::chrono::system_clock::now();
 
     json attack_IP = json::array();
     json results = analyzeLogs(jsonFilePath, attack_IP);
